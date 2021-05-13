@@ -24,7 +24,7 @@ from unittest.mock import patch
 import pytest
 
 from ros_cross_compile.platform import Platform
-from ros_cross_compile.sysroot_creator import CreateSysrootStage
+from ros_cross_compile.sysroot_creator import CreateSysroot
 from ros_cross_compile.sysroot_creator import prepare_docker_build_environment
 from ros_cross_compile.sysroot_creator import setup_emulator
 
@@ -88,8 +88,8 @@ def test_basic_sysroot_creation(tmpdir):
     mock_data_collector = Mock()
     platform = Platform('aarch64', 'ubuntu', 'foxy')
 
-    stage = CreateSysrootStage()
-    stage(
+    sysroot = CreateSysroot()
+    sysroot(
         platform,
         mock_docker_client,
         Path('dummy_path'),
@@ -98,6 +98,6 @@ def test_basic_sysroot_creation(tmpdir):
     assert mock_docker_client.build_image.call_count == 1
 
 
-def test_create_sysroot_stage_creation():
-    temp_stage = CreateSysrootStage()
-    assert temp_stage
+def test_create_sysroot_creation():
+    temp = CreateSysroot()
+    assert temp

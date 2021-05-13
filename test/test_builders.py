@@ -24,7 +24,7 @@ from ros_cross_compile.dependencies import rosdep_install_script
 from ros_cross_compile.docker_client import DockerClient
 from ros_cross_compile.pipeline_stages import PipelineStageOptions
 from ros_cross_compile.platform import Platform
-from ros_cross_compile.sysroot_creator import CreateSysrootStage
+from ros_cross_compile.sysroot_creator import CreateSysroot
 from ros_cross_compile.sysroot_creator import prepare_docker_build_environment
 
 from .utilities import default_pipeline_options
@@ -79,8 +79,8 @@ def buildable_env(request, tmpdir):
     options = default_pipeline_options()
     data_collector = DataCollector()
 
-    CreateSysrootStage()(
-        platform, docker, ros_workspace, options, data_collector)
+    CreateSysroot()(
+        docker, platform, ros_workspace, options, data_collector)
 
     return BuildableEnv(platform, docker, ros_workspace, options, data_collector)
 
@@ -150,7 +150,7 @@ def test_custom_post_build_script(tmpdir):
     options = default_pipeline_options()
     data_collector = DataCollector()
 
-    CreateSysrootStage()(
+    CreateSysroot()(
         platform, docker, ros_workspace, options, data_collector)
     EmulatedDockerBuildStage()(
         platform, docker, ros_workspace, options, data_collector)

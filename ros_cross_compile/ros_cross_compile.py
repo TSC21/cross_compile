@@ -24,7 +24,7 @@ import sys
 from typing import List
 from typing import Optional
 
-from ros_cross_compile.builders import EmulatedDockerBuildStage
+from ros_cross_compile.builders import CrossCompileBuild
 from ros_cross_compile.data_collector import DataCollector
 from ros_cross_compile.data_collector import DataWriter
 from ros_cross_compile.dependencies import CollectDependencyListStage
@@ -36,7 +36,7 @@ from ros_cross_compile.platform import SUPPORTED_ARCHITECTURES
 from ros_cross_compile.platform import SUPPORTED_ROS2_DISTROS
 from ros_cross_compile.platform import SUPPORTED_ROS_DISTROS
 from ros_cross_compile.runtime import PackageRuntimeImageStage
-from ros_cross_compile.sysroot_creator import CreateSysrootStage
+from ros_cross_compile.sysroot_creator import CreateSysroot
 from ros_cross_compile.sysroot_creator import prepare_docker_build_environment
 
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +44,7 @@ logger = logging.getLogger(__name__)
 
 _PIPELINE = [
     CollectDependencyListStage(),
-    CreateSysrootStage(),
+    CreateSysroot(),
     # EmulatedDockerBuildStage(),
     CrossCompileBuild(),
     PackageRuntimeImageStage(),

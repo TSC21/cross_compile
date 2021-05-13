@@ -138,7 +138,7 @@ def create_workspace_sysroot(
     image_tag = platform.sysroot_image_tag
     sysroot_destination = (ros_workspace / build_internals_dir(platform)).parent / 'sysroot'
 
-    assert_install_rosdep_script_exists(ros_workspace, platform)
+    # assert_install_rosdep_script_exists(ros_workspace, platform)
     logger.info('Building sysroot image: %s', image_tag)
     docker_client.build_image(
         dockerfile_name='sysroot.Dockerfile',
@@ -179,7 +179,7 @@ class CreateSysroot(PipelineStage):
         options: PipelineStageOptions,
         data_collector: DataCollector
     ):
-        create_workspace_sysroot_image(docker_client, platform)
+        create_workspace_sysroot(docker_client, platform, ros_workspace_dir)
 
         img_size = docker_client.get_image_size(platform.sysroot_image_tag)
         data_collector.add_size(self.name, img_size)

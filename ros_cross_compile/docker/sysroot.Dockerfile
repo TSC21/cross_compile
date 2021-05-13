@@ -32,6 +32,9 @@ RUN if [[ "${ROS_VERSION}" == "ros2" ]]; then \
 # ROS dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
       python3-pip \
+      python3-colcon-common-extensions \
+      python3-colcon-mixin \
+      python3-dev \
       libssl-dev \
       symlinks \
     && rm -rf /var/lib/apt/lists/*
