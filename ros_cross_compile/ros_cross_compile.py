@@ -222,13 +222,15 @@ def cross_compile_pipeline(
     for stage in _PIPELINE:
         if stage.name not in skip:
             with data_collector.timer('{}'.format(stage.name)):
-                stage(platform, docker_client, ros_workspace_dir, options, data_collector)
+                stage(platform, docker_client,
+                      ros_workspace_dir, options, data_collector)
 
 
 def main():
     """Start the cross-compilation workflow."""
     args = parse_args(sys.argv[1:])
-    platform = Platform(args.arch, args.os, args.rosdistro, args.sysroot_base_image)
+    platform = Platform(args.arch, args.os, args.rosdistro,
+                        args.sysroot_base_image)
     ros_workspace_dir = _resolve_ros_workspace(args.ros_workspace)
     data_collector = DataCollector()
     data_writer = DataWriter(ros_workspace_dir, args.custom_metric_file)

@@ -24,7 +24,7 @@ rsync -a ${SYSROOT}/usr/include/ /usr/include/
 
 set +ux
 # shellcheck source=/dev/null
-source /opt/ros/"${ROS_DISTRO}"/setup.bash
+source ${rosdir}/setup.bash
 if [ -f /custom-data/setup.bash ]; then
     # shellcheck source=/dev/null
     source /custom-data/setup.bash

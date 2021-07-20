@@ -95,10 +95,15 @@ def run_cross_compile_docker_build(
 
 
 class CrossCompileBuild(PipelineStage):
+
     def __init__(self):
         super().__init__('cross_compile_build')
 
-    def __call__(self, platform: Platform, docker_client: DockerClient, ros_workspace_dir: Path,
+    def __call__(self,
+                 platform: Platform,
+                 docker_client: DockerClient,
+                 ros_workspace_dir: Path,
                  options: PipelineStageOptions,
                  data_collector: DataCollector):
-        run_cross_compile_docker_build(docker_client, platform, ros_workspace_dir)
+        run_cross_compile_docker_build(
+            docker_client, platform, ros_workspace_dir)

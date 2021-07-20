@@ -67,7 +67,8 @@ def setup_emulator(arch: str, output_dir: Path) -> None:
     emulator_name = 'qemu-{}-static'.format(arch)
     bin_dir = output_dir / 'bin'
     bin_dir.mkdir(parents=True, exist_ok=True)
-    needs_emulator = (py_platform.system() != 'Darwin') and (py_platform.machine() != arch)
+    needs_emulator = (py_platform.system() != 'Darwin') and (
+        py_platform.machine() != arch)
     if needs_emulator:
         """
         Using the same qemu binaries as the ones provided in
@@ -104,6 +105,7 @@ def prepare_docker_build_environment(
     docker_build_dir = ros_workspace / build_internals_dir(platform)
     docker_build_dir.mkdir(parents=True, exist_ok=True)
     (docker_build_dir.parent / 'COLCON_IGNORE').touch()
+    # os.chown(docker_build_dir.parent / 'COLCON_IGNORE', getpass.getuser(), os.getegid());
 
     _copytree(package_dir / 'docker', docker_build_dir)
     _copytree(package_dir / 'mixins', docker_build_dir / 'mixins')
@@ -116,7 +118,8 @@ def prepare_docker_build_environment(
         custom_data_dest.mkdir(exist_ok=True)
 
     _copy_or_touch(custom_setup_script, docker_build_dir / 'user-custom-setup')
-    _copy_or_touch(custom_post_build_script, docker_build_dir / 'user-custom-post-build')
+    _copy_or_touch(custom_post_build_script,
+                   docker_build_dir / 'user-custom-post-build')
 
     setup_emulator(platform.qemu_arch, docker_build_dir)
 
@@ -136,7 +139,8 @@ def create_workspace_sysroot(
     :param build_context Directory containing all assets needed by sysroot.Dockerfile
     """
     image_tag = platform.sysroot_image_tag
-    sysroot_destination = (ros_workspace / build_internals_dir(platform)).parent / 'sysroot'
+    sysroot_destination = (
+        ros_workspace / build_internals_dir(platform)).parent / 'sysroot'
 
     # assert_install_rosdep_script_exists(ros_workspace, platform)
     logger.info('Building sysroot image: %s', image_tag)

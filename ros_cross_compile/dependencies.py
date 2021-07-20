@@ -23,7 +23,7 @@ from ros_cross_compile.docker_client import DockerClient
 from ros_cross_compile.pipeline_stages import PipelineStage
 from ros_cross_compile.pipeline_stages import PipelineStageOptions
 from ros_cross_compile.platform import Platform
-from ros_cross_compile.sysroot_creator import build_internals_dir, rosdep_install_script
+from ros_cross_compile.sysroot_creator import rosdep_install_script
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('Rosdep Gatherer')
@@ -32,8 +32,6 @@ logger = logging.getLogger('Rosdep Gatherer')
 CUSTOM_SETUP = '/usercustom/rosdep_setup'
 CUSTOM_DATA = '/usercustom/custom-data'
 _IMG_NAME = 'ros_cross_compile:rosdep'
-
-
 
 
 def gather_rosdeps(
@@ -62,7 +60,8 @@ def gather_rosdeps(
         tag=_IMG_NAME,
     )
 
-    logger.info('Running rosdep collector image on workspace {}'.format(workspace))
+    logger.info(
+        'Running rosdep collector image on workspace {}'.format(workspace))
     volumes = {
         workspace: '/ws',
     }
@@ -89,7 +88,8 @@ def assert_install_rosdep_script_exists(
     ros_workspace_dir: Path,
     platform: Platform
 ) -> bool:
-    install_rosdep_script_path = ros_workspace_dir / rosdep_install_script(platform)
+    install_rosdep_script_path = ros_workspace_dir / \
+        rosdep_install_script(platform)
     if not install_rosdep_script_path.is_file():
         raise RuntimeError(
             'Rosdep installation script has never been created, you need to run this without '

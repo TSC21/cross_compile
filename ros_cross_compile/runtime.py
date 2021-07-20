@@ -31,7 +31,8 @@ def create_runtime_image(
 ):
     logger.info('Building runtime image: {}'.format(image_tag))
     docker_client.build_image(
-        dockerfile_name=os.path.join(docker_client._default_docker_dir, 'runtime.Dockerfile'),
+        dockerfile_name=os.path.join(
+            docker_client._default_docker_dir, 'runtime.Dockerfile'),
         dockerfile_dir=workspace_dir,
         tag=image_tag,
         buildargs={

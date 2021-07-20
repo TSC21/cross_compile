@@ -80,7 +80,8 @@ class DataWriter:
     def __init__(self, ros_workspace_dir: Path,
                  output_file):
         """Configure path for writing data."""
-        self._write_path = Path(str(ros_workspace_dir)) / Path(INTERNALS_DIR) / Path('metrics')
+        self._write_path = Path(str(ros_workspace_dir)) / \
+            Path(INTERNALS_DIR) / Path('metrics')
         self._write_path.mkdir(parents=True, exist_ok=True)
         self.write_file = self._write_path / output_file
 
@@ -89,7 +90,8 @@ class DataWriter:
         print('=================================================================================')
         for datum in data_to_print:
             # readable_time = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(datum['timestamp']))
-            readable_time = datetime.utcfromtimestamp(datum.timestamp).isoformat()
+            readable_time = datetime.utcfromtimestamp(
+                datum.timestamp).isoformat()
             if datum.unit == Units.Seconds.value:
                 print('{:>12} | {:>35}: {:.2f} {}'.format(readable_time, datum.name,
                                                           datum.value, datum.unit),
@@ -135,5 +137,6 @@ class DataWriter:
         if print_data:
             self.print_helper(data_collector.data)
         with self.write_file.open('w') as f:
-            data_to_dump = self.serialize_to_cloudwatch(data_collector.data, platform)
+            data_to_dump = self.serialize_to_cloudwatch(
+                data_collector.data, platform)
             json.dump(list(data_to_dump), f, sort_keys=True, indent=4)

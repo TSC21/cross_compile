@@ -28,6 +28,7 @@ DEFAULT_COLCON_DEFAULTS_FILE = 'defaults.yaml'
 
 
 class GeneratorStream(io.RawIOBase):
+
     def __init__(self, generator):
         self.leftover = None
         self.generator = generator
@@ -62,8 +63,10 @@ class DockerClient:
         """
         self._client = docker.from_env()
         self._disable_cache = disable_cache
-        self._default_docker_dir = str(default_docker_dir or Path(__file__).parent / 'docker')
-        self._colcon_defaults_file = str(colcon_defaults_file or DEFAULT_COLCON_DEFAULTS_FILE)
+        self._default_docker_dir = str(
+            default_docker_dir or Path(__file__).parent / 'docker')
+        self._colcon_defaults_file = str(
+            colcon_defaults_file or DEFAULT_COLCON_DEFAULTS_FILE)
 
     def build_image(
         self,
@@ -87,7 +90,8 @@ class DockerClient:
         docker_api = docker.APIClient(**docker_kwargs_from_env())
         logger.info('Sending context to Docker client')
         log_generator = docker_api.build(
-            path=str(dockerfile_dir) if dockerfile_dir else self._default_docker_dir,
+            path=str(
+                dockerfile_dir) if dockerfile_dir else self._default_docker_dir,
             dockerfile=dockerfile_name,
             tag=tag,
             buildargs=buildargs,
@@ -140,7 +144,7 @@ class DockerClient:
         # Note that the `run` kwarg `stream` is not available
         # in the version of dockerpy that we are using, so we must detach to live-stream logs
         # Do not `remove` so that the container can be queried for its exit code after finishing
-        logger.info("Running docker container of image {}".format(image_name))
+        logger.info('Running docker container of image %s', image_name)
         container = self._client.containers.run(
             image=image_name,
             name=container_name,

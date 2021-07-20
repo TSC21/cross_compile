@@ -18,7 +18,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from ros_cross_compile.builders import EmulatedDockerBuildStage
+from ros_cross_compile.builders import CrossCompileBuild
 from ros_cross_compile.data_collector import DataCollector
 from ros_cross_compile.dependencies import rosdep_install_script
 from ros_cross_compile.docker_client import DockerClient
@@ -43,7 +43,7 @@ def test_emulated_docker_build():
     mock_data_collector = Mock()
     platform = Platform('aarch64', 'ubuntu', 'foxy')
 
-    stage = EmulatedDockerBuildStage()
+    stage = CrossCompileBuild()
     stage(
         platform,
         mock_docker_client,
@@ -55,7 +55,7 @@ def test_emulated_docker_build():
 
 
 def test_docker_build_stage_creation():
-    temp_stage = EmulatedDockerBuildStage()
+    temp_stage = CrossCompileBuild()
     assert temp_stage
 
 
@@ -70,7 +70,7 @@ BuildableEnv = NamedTuple('BuildableEnv', [
 
 @pytest.fixture
 def buildable_env(request, tmpdir):
-    """Set up a temporary directory with everything needed to run the EmulatedDockerBuildStage."""
+    """Set up a temporary directory with everything needed to run the CrossCompileBuild."""
     platform = Platform('aarch64', 'ubuntu', 'foxy')
     ros_workspace = Path(str(tmpdir)) / 'ros_ws'
     _touch_anywhere(ros_workspace / rosdep_install_script(platform))
@@ -87,7 +87,7 @@ def buildable_env(request, tmpdir):
 
 @uses_docker
 def test_build_ownership_on_success(buildable_env):
-    EmulatedDockerBuildStage()(
+    CrossCompileBuild()(
         buildable_env.platform,
         buildable_env.docker,
         buildable_env.ros_workspace,
@@ -118,7 +118,7 @@ def test_build_ownership_on_failure(buildable_env):
 
     # Expect the build to fail
     with pytest.raises(Exception):
-        EmulatedDockerBuildStage()(
+        CrossCompileBuild()(
             buildable_env.platform,
             buildable_env.docker,
             ros_workspace,
@@ -152,7 +152,7 @@ def test_custom_post_build_script(tmpdir):
 
     CreateSysroot()(
         platform, docker, ros_workspace, options, data_collector)
-    EmulatedDockerBuildStage()(
+    CrossCompileBuild()(
         platform, docker, ros_workspace, options, data_collector)
 
     assert (ros_workspace / created_filename).is_file()
