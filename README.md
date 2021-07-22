@@ -5,9 +5,6 @@
 
 A tool to automate compiling ROS and ROS 2 workspaces to non-native architectures.
 
-:construction: `ros_cross_compile` relies on running emulated builds
-using QEmu, #69 tracks progress toward enabling cross-compilation.
-
 
 ## Supported targets
 
@@ -41,12 +38,6 @@ This tool requires that you have already installed
   * Follow the instructions to add yourself to the `docker` group as well, so you can run containers as a non-root user
 * Python 3.6 or higher
 
-If you are using a Linux host, you must also install QEmu (Docker for OSX performs emulation automatically):
-
-```sh
-sudo apt-get install qemu-user-static
-```
-
 ### Installing ros_cross_compile
 
 To install the stable release,
@@ -71,7 +62,6 @@ pip3 install --index-url https://test.pypi.org/simple/ ros_cross_compile
     1. Install build tools (compilers, cmake, colcon, etc)
     1. Run the dependency installer script collected in Step 1 (if dependency list hasn't changed since last run, this uses the Docker cache)
 1. Build
-    1. Runs the "sysroot image" using QEmu emulation
     1. `colcon build`
 1. (Optional) Create runtime image
     1. Creates a docker image that can be used on the target platform to run the build. See "Runtime Image" section.
@@ -390,10 +380,6 @@ build-stuff:
   tags:
     - ros
   before_script:
-    # Install packages
-    - apt update
-    - apt install -qq -y qemu-user-static python3-pip rsync
-
     # Set up the workspace
     - cd ${CI_PROJECT_DIR}/..
     - rm -rf cross_compile_ws/src

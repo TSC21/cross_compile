@@ -25,52 +25,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def run_emulated_docker_build(
-    docker_client: DockerClient,
-    platform: Platform,
-    workspace_path: Path
-) -> None:
-    """
-    Spin up a sysroot docker container and run an emulated build inside.
-
-    :param docker_client: Preconfigured to run Docker images.
-    :param platform: Information about the target platform.
-    :param workspace: Absolute path to the user's source workspace.
-    """
-    docker_client.run_container(
-        image_name=platform.sysroot_image_tag,
-        environment={
-            'OWNER_USER': str(os.getuid()),
-            'ROS_DISTRO': platform.ros_distro,
-            'TARGET_ARCH': platform.arch,
-        },
-        volumes={
-            workspace_path: '/ros_ws',
-        },
-    )
-
-
-class EmulatedDockerBuildStage(PipelineStage):
-    """
-    This stage spins up a docker container and runs the emulated build with it.
-
-    Uses the sysroot image from the previous stage.
-    """
-
-    def __init__(self):
-        super().__init__('emulated_build')
-
-    def __call__(
-        self,
-        platform: Platform,
-        docker_client: DockerClient,
-        ros_workspace_dir: Path,
-        options: PipelineStageOptions,
-        data_collector: DataCollector
-    ):
-        run_emulated_docker_build(docker_client, platform, ros_workspace_dir)
-
-
 def run_cross_compile_docker_build(
     docker_client: DockerClient,
     platform: Platform,

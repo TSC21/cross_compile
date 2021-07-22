@@ -15,17 +15,17 @@ from typing import NamedTuple
 from typing import Optional
 
 ArchNameMapping = NamedTuple(
-    'ArchNameMapping', [('docker', str), ('qemu', str), ('target_triple', str)])
+    'ArchNameMapping', [('docker', str), ('target_triple', str)])
 
 
 # NOTE: when changing any following values, update README.md Supported Targets section
 ARCHITECTURE_NAME_MAP = {
     'armhf': ArchNameMapping(
-        docker='arm32v7', qemu='arm', target_triple='arm-linux-gnueabi'),
+        docker='arm32v7', target_triple='arm-linux-gnueabi'),
     'aarch64': ArchNameMapping(
-        docker='arm64v8', qemu='aarch64', target_triple='aarch64-linux-gnu'),
+        docker='arm64v8', target_triple='aarch64-linux-gnu'),
     'x86_64': ArchNameMapping(
-        docker='', qemu='x86_64', target_triple='x86_64-linux-gnu'),
+        docker='', target_triple='x86_64-linux-gnu'),
 }
 SUPPORTED_ARCHITECTURES = tuple(ARCHITECTURE_NAME_MAP.keys())
 
@@ -112,10 +112,6 @@ class Platform:
     @property
     def arch(self):
         return self._arch
-
-    @property
-    def qemu_arch(self):
-        return ARCHITECTURE_NAME_MAP[self.arch].qemu
 
     @property
     def ros_distro(self):

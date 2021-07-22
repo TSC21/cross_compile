@@ -62,29 +62,6 @@ def _copy_or_touch(src: Optional[Path], dest: Path) -> None:
         dest.touch()
 
 
-def setup_emulator(arch: str, output_dir: Path) -> None:
-    """Copy the appropriate emulator binary to the output location."""
-    emulator_name = 'qemu-{}-static'.format(arch)
-    bin_dir = output_dir / 'bin'
-    bin_dir.mkdir(parents=True, exist_ok=True)
-    needs_emulator = (py_platform.system() != 'Darwin') and (
-        py_platform.machine() != arch)
-    if needs_emulator:
-        """
-        Using the same qemu binaries as the ones provided in
-        https://github.com/osrf/multiarch-docker-image-generation in order to
-        work around https://bugs.launchpad.net/qemu/+bug/1805913 and so qemu
-        supports renameat2() syscall.
-        """
-        emulator_path = Path(__file__).parent / 'qemu' / emulator_name
-        if not emulator_path.is_file():
-            raise RuntimeError('Could not find the expected QEmu emulator binary "{}"'.format(
-                emulator_path))
-        _copyfile(emulator_path, bin_dir)
-    else:
-        (bin_dir / emulator_name).touch()
-
-
 def prepare_docker_build_environment(
     platform: Platform,
     ros_workspace: Path,
@@ -120,8 +97,6 @@ def prepare_docker_build_environment(
     _copy_or_touch(custom_setup_script, docker_build_dir / 'user-custom-setup')
     _copy_or_touch(custom_post_build_script,
                    docker_build_dir / 'user-custom-post-build')
-
-    setup_emulator(platform.qemu_arch, docker_build_dir)
 
     return docker_build_dir
 

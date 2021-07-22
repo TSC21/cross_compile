@@ -1,15 +1,12 @@
 # This file describes an image that has everything necessary installed to build a target ROS workspace
-# It uses QEmu user-mode emulation to perform dependency installation and build
-# Assumptions: qemu-user-static directory is present in docker build context
 
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
+ARG ROS_VERSION
+
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
-
-# Grab the qemu binaries, if any, that were placed in the build context for us
-COPY bin/* /usr/bin/
 
 # # Add the ros apt repo
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -39,8 +36,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
       symlinks \
     && rm -rf /var/lib/apt/lists/*
 
-ARG ROS_VERSION
-
 # Install Fast-RTPS dependencies for ROS 2
 RUN if [[ "${ROS_VERSION}" == "ros2" ]]; then \
     apt-get update && apt-get install --no-install-recommends -y \
@@ -66,13 +61,3 @@ RUN apt-get update && \
 
 # Make all absolute symlinks in the filesystem relative, so that we can use it for cross-compilation
 RUN symlinks -rc /
-
-# Set up build tools for the workspace
-COPY mixins/ mixins/
-RUN colcon mixin add cc_mixin file://$(pwd)/mixins/index.yaml && colcon mixin update cc_mixin
-# In case the workspace did not actually install any dependencies, add these for uniformity
-COPY build_workspace.sh /root
-WORKDIR /ros_ws
-COPY user-custom-post-build /
-RUN chmod +x /user-custom-post-build
-ENTRYPOINT ["/root/build_workspace.sh"]

@@ -18,9 +18,16 @@ rosdir=${SYSROOT}/opt/ros/${ROS_DISTRO}
 mkdir -p ${rosdir}
 touch ${rosdir}/setup.bash
 
-export TRIPLE=aarch64-linux-gnu
+# Get the required tooling to the paths
+export TRIPLE=${TARGET_ARCH}-linux-gnu
 rsync -a ${SYSROOT}/usr/lib/${TRIPLE}/ /usr/lib/${TRIPLE}/
 rsync -a ${SYSROOT}/usr/include/ /usr/include/
+# rsync -a ${SYSROOT}/usr/bin/ /usr/bin/
+# rsync -a ${SYSROOT}/bin/ /bin/
+# rsync -a ${SYSROOT}/lib/ /lib/
+# rsync -a ${SYSROOT}/etc/alternatives/ /etc/alternatives/
+# rsync -a ${SYSROOT}/etc/environment /etc/environment
+# rsync -a ${SYSROOT}/etc/ssl/ /etc/ssl/
 
 set +ux
 # shellcheck source=/dev/null
@@ -30,10 +37,10 @@ if [ -f /custom-data/setup.bash ]; then
     source /custom-data/setup.bash
 fi
 set -ux
-colcon build --mixin "${TARGET_ARCH}"-docker \
+colcon build \
   --build-base build_"${TARGET_ARCH}" \
   --install-base install_"${TARGET_ARCH}" \
-  --event-handlers console_cohesion+ console_package_list+
+  --event-handlers console_direct+ \
   --cmake-args -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DCMAKE_TOOLCHAIN_FILE=/toolchains/${TARGET_ARCH}-gnu.cmake --no-warn-unused-cli
 
 # Runs user-provided post-build logic (file is present and empty if it wasn't specified)

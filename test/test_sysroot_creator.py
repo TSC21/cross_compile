@@ -49,8 +49,6 @@ def test_prepare_docker_build_basic(tmpdir):
     tmp = Path(str(tmpdir))
     out_dir = prepare_docker_build_environment(platform, tmp, None, None)
 
-    if system() != 'Darwin':
-        assert (out_dir / 'bin' / 'qemu-arm-static').exists()
     assert (out_dir / 'rosdep.Dockerfile').exists()
     assert (out_dir / 'sysroot.Dockerfile').exists()
 
@@ -73,7 +71,6 @@ def test_prepare_docker_build_with_user_custom(tmpdir):
         custom_setup_script=this_dir / 'user-custom-setup',
     )
 
-    assert (out_dir / 'bin' / 'qemu-aarch64-static').exists()
     assert (out_dir / 'rosdep.Dockerfile').exists()
     assert (out_dir / 'sysroot.Dockerfile').exists()
     assert (out_dir / 'custom-data' / 'arbitrary.txt')

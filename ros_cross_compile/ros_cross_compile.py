@@ -45,7 +45,6 @@ logger = logging.getLogger(__name__)
 _PIPELINE = [
     CollectDependencyListStage(),
     CreateSysroot(),
-    # EmulatedDockerBuildStage(),
     CrossCompileBuild(),
     PackageRuntimeImageStage(),
 ]

@@ -176,6 +176,6 @@ class DockerClient:
     def export_image_filesystem(self, image_tag: str):
         container = self._client.containers.run(image=image_tag, detach=True)
         export_generator = container.export()
-        stream = io.BufferedReader(GeneratorStream(export_generator))
-        tar = tarfile.open(fileobj=stream, mode='r|*')
+        # stream = io.BufferedReader(GeneratorStream(export_generator))
+        tar = tarfile.open(fileobj=export_generator, mode='r|*')
         return tar

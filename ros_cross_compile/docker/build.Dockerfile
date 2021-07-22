@@ -19,9 +19,13 @@ RUN apt-get update && apt-get install -q -y --no-install-recommends rsync
 
 RUN pip3 install lark-parser numpy
 
-# Fast and small, no optimization necessary
-COPY mixins/ /mixins/
+# Set up build tools for the workspace
+COPY mixins/ mixins/
+RUN colcon mixin add cc_mixin file://$(pwd)/mixins/index.yaml && colcon mixin update cc_mixin
+# In case the workspace did not actually install any dependencies, add these for uniformity
 COPY build_workspace.sh /root
 COPY toolchains/ /toolchains/
 WORKDIR /ros_ws
+COPY user-custom-post-build /
+RUN chmod +x /user-custom-post-build
 ENTRYPOINT ["/root/build_workspace.sh"]

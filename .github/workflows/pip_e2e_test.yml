@@ -25,9 +25,6 @@ jobs:
       uses: actions/setup-python@v2.2.2
       with:
         python-version: 3.6
-    - name: Install dependencies
-      run: |
-        sudo apt update && sudo apt install -y qemu-user-static
     - name: Install ros-cross-compile from Test PyPi
       if: matrix.install_type == 'test'
       run: |

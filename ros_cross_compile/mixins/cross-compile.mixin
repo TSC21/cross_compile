@@ -11,8 +11,6 @@ build:
             - "--no-warn-unused-cli"
     armhf-linux:
         cmake-args:
-                "--no-warn-unused-cli"
-            ],
-        }
-    }
-}
+            - "--no-warn-unused-cli"
+    x86_64-docker: {}
+    x86_64-linux: {}
